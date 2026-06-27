@@ -12,8 +12,9 @@ void updateStructuralTilt(sensors_event_t a, sensors_event_t g, float dt, float 
     float accelRoll = atan2(-a.acceleration.x, a.acceleration.z) * 180 / PI;
 
     // 2. Complementary Filter (Fuses Gyro and Accelerometer data)
-    pitch = 0.98 * (pitch + g.gyro.x * dt) + 0.02 * accelPitch;
-    roll  = 0.98 * (roll  + g.gyro.y * dt) + 0.02 * accelRoll;
+    // Gyroscope values from Adafruit MPU6050 are in rad/s, converting to deg/s by multiplying by 180/PI
+    pitch = 0.98 * (pitch + g.gyro.x * dt * 180 / PI) + 0.02 * accelPitch;
+    roll  = 0.98 * (roll  + g.gyro.y * dt * 180 / PI) + 0.02 * accelRoll;
 
     // 3. Convert Z-axis acceleration to G-forces
     z_gforce = abs(a.acceleration.z / 9.81);
